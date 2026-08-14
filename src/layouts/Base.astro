@@ -1,0 +1,54 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  lang: "en" | "pt";
+  title: string;
+  description: string;
+  altHref: string;
+  altLabel: string;
+  altAria: string;
+  name: string;
+}
+const { lang, title, description, altHref, altLabel, altAria, name } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="profile" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" hreflang="en" href="/" />
+    <link rel="alternate" hreflang="pt" href="/pt/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500&display=swap"
+    />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <div class="wrap">
+      <nav class="topbar">
+        <span>{name}</span>
+        <a href={altHref} hreflang={lang === "en" ? "pt" : "en"} aria-label={altAria}>
+          {altLabel}
+        </a>
+      </nav>
+      <main id="main">
+        <slot />
+      </main>
+      <footer>
+        © {year} {name} · <a href="https://github.com/joralexsil/joralexsil">Source</a>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,263 @@
+/* ── tokens ─────────────────────────────────────────────────────────── */
+:root {
+  /* Paleta: papel técnico frio, tinta, aço, e o azul de marcação de bancada
+     (layout dye) que se usa em metalomecânica para riscar peças. */
+  --paper: #eeeeea;
+  --paper-2: #e5e5e0;
+  --ink: #14171a;
+  --steel: #5d646c;
+  --rule: #c6c8c3;
+  --marking: #1b4f9c;
+  --marking-soft: #dfe7f3;
+
+  --font-display: "IBM Plex Sans Condensed", "Arial Narrow", sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --measure: 62ch;
+  --gutter: clamp(1.25rem, 5vw, 3rem);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #101315;
+    --paper-2: #171b1e;
+    --ink: #e8e8e4;
+    --steel: #939aa2;
+    --rule: #2c3236;
+    --marking: #7aa7e8;
+    --marking-soft: #1c2836;
+  }
+}
+
+/* ── base ───────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
+  line-height: 1.6;
+  font-synthesis-weight: none;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: var(--rule);
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color 120ms ease, color 120ms ease;
+}
+a:hover { color: var(--marking); text-decoration-color: currentColor; }
+
+:focus-visible {
+  outline: 2px solid var(--marking);
+  outline-offset: 3px;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 62rem;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.skip {
+  position: absolute;
+  left: -9999px;
+}
+.skip:focus {
+  left: var(--gutter);
+  top: 0.75rem;
+  z-index: 10;
+  background: var(--paper);
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--ink);
+}
+
+/* ── barra de topo ──────────────────────────────────────────────────── */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding-block: 1.5rem 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+.topbar a { text-decoration: none; border-bottom: 1px solid var(--rule); padding-bottom: 2px; }
+
+/* ── hero ───────────────────────────────────────────────────────────── */
+.hero { padding-block: clamp(2.5rem, 8vw, 5rem) clamp(2rem, 5vw, 3rem); }
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.75rem, 11vw, 6rem);
+  line-height: 0.92;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.hero .role {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  color: var(--steel);
+  margin: 1rem 0 0;
+}
+
+.hero .place {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--steel);
+  margin: 0.35rem 0 0;
+}
+
+/* ── assinatura: cotagem ────────────────────────────────────────────── */
+.gauge {
+  margin-block: clamp(2rem, 6vw, 3.5rem);
+  border-block: 1px solid var(--rule);
+  padding-block: 1.5rem;
+}
+.gauge svg { display: block; width: 100%; height: auto; }
+.gauge .g-line { stroke: var(--steel); stroke-width: 1; fill: none; vector-effect: non-scaling-stroke; }
+.gauge .g-line--hot { stroke: var(--marking); }
+.gauge .g-ext { stroke: var(--rule); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.gauge .g-label {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  fill: var(--ink);
+}
+.gauge .g-num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--steel);
+  letter-spacing: 0.04em;
+}
+.gauge .g-num--hot { fill: var(--marking); }
+
+/* ── prosa ──────────────────────────────────────────────────────────── */
+.summary { max-width: var(--measure); }
+.summary p { margin: 0 0 1.1rem; }
+.summary p:first-child { font-size: 1.15em; }
+
+/* ── secções ────────────────────────────────────────────────────────── */
+.block { padding-block: clamp(2rem, 5vw, 3rem); border-top: 1px solid var(--rule); }
+
+.block > h2 {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--steel);
+  margin: 0 0 1.75rem;
+}
+
+.entry {
+  display: grid;
+  grid-template-columns: 9.5rem 1fr;
+  gap: 0 2rem;
+  margin-bottom: 2rem;
+}
+.entry:last-child { margin-bottom: 0; }
+
+.entry .period {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+  color: var(--steel);
+  padding-top: 0.35rem;
+}
+.entry h3 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  margin: 0;
+}
+.entry .org {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--marking);
+  margin: 0.2rem 0 0.6rem;
+}
+.entry ul { margin: 0; padding-left: 1.05rem; max-width: var(--measure); }
+.entry li { margin-bottom: 0.35rem; }
+.entry li::marker { color: var(--rule); }
+
+@media (max-width: 44rem) {
+  .entry { grid-template-columns: 1fr; gap: 0.4rem; }
+  .entry .period { padding-top: 0; order: -1; }
+}
+
+/* ── stack ──────────────────────────────────────────────────────────── */
+.stack { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+.stack .label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--steel);
+  margin: 0 0 0.6rem;
+}
+.stack ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.stack li {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+}
+
+/* ── contacto ───────────────────────────────────────────────────────── */
+.contact p { max-width: var(--measure); margin: 0 0 1.25rem; }
+.contact .mail {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 5vw, 2.25rem);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  text-decoration: none;
+  border-bottom: 2px solid var(--marking);
+  padding-bottom: 0.1em;
+}
+.contact .links {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin: 1.75rem 0 0;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}
+
+/* ── rodapé ─────────────────────────────────────────────────────────── */
+footer {
+  border-top: 1px solid var(--rule);
+  padding-block: 1.5rem 3rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}

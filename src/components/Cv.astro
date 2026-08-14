@@ -1,0 +1,96 @@
+---
+import Base from "../layouts/Base.astro";
+import Gauge from "./Gauge.astro";
+import { cv, AXIS, type Lang } from "../data/cv";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = cv[lang];
+const timeline = [...d.experience, ...d.education];
+---
+
+<Base
+  lang={lang}
+  title={d.meta.title}
+  description={d.meta.description}
+  altHref={d.langHref}
+  altLabel={d.langLabel}
+  altAria={d.langAria}
+  name={d.name}
+>
+  <header class="hero">
+    <h1>{d.name}</h1>
+    <p class="role">{d.role}</p>
+    <p class="place">{d.location}</p>
+  </header>
+
+  <Gauge from={AXIS.from} to={AXIS.to} spans={d.spans} />
+
+  <div class="summary">
+    {d.summary.map((p) => <p>{p}</p>)}
+  </div>
+
+  <section class="block">
+    <h2>{d.sections.experience}</h2>
+    {d.experience.map((e) => (
+      <article class="entry">
+        <div class="period">{e.period}</div>
+        <div>
+          <h3>{e.role}</h3>
+          <p class="org">{e.org}</p>
+          <ul>{e.notes.map((n) => <li>{n}</li>)}</ul>
+        </div>
+      </article>
+    ))}
+  </section>
+
+  <section class="block">
+    <h2>{d.sections.education}</h2>
+    {d.education.map((e) => (
+      <article class="entry">
+        <div class="period">{e.period}</div>
+        <div>
+          <h3>{e.role}</h3>
+          <p class="org">{e.org}</p>
+          <ul>{e.notes.map((n) => <li>{n}</li>)}</ul>
+        </div>
+      </article>
+    ))}
+  </section>
+
+  <section class="block">
+    <h2>{d.sections.stack}</h2>
+    <div class="stack">
+      {d.stack.map((g) => (
+        <div>
+          <p class="label">{g.label}</p>
+          <ul>{g.items.map((i) => <li>{i}</li>)}</ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>{d.sections.projects}</h2>
+    {d.projects.map((p) => (
+      <article class="entry">
+        <div class="period"></div>
+        <div>
+          <h3>{p.href ? <a href={p.href}>{p.name}</a> : p.name}</h3>
+          <ul><li>{p.desc}</li></ul>
+        </div>
+      </article>
+    ))}
+  </section>
+
+  <section class="block contact">
+    <h2>{d.sections.contact}</h2>
+    <p>{d.contact.line}</p>
+    <a class="mail" href={`mailto:${d.contact.email}`}>{d.contact.email}</a>
+    <ul class="links">
+      {d.contact.links.filter((l) => l.href).map((l) => (
+        <li><a href={l.href} rel="me noopener">{l.label} ↗</a></li>
+      ))}
+    </ul>
+  </section>
+</Base>

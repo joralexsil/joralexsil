@@ -1,0 +1,61 @@
+---
+// Cotagem técnica: linhas de medida como num desenho de peça.
+// Mostra em quanto tempo se sobrepõem as duas carreiras.
+interface Span { from: number; to: number; label: string; emphasis?: boolean }
+interface Props { from: number; to: number; spans: readonly Span[] }
+
+const { from, to, spans } = Astro.props;
+
+const W = 800;
+const L = 4;      // margem esquerda
+const R = 796;    // margem direita
+const baseY = 118;
+const rowH = 44;
+const H = baseY + 28;
+
+const x = (year: number) => L + ((year - from) / (to - from)) * (R - L);
+
+const ticks = Array.from(
+  { length: Math.floor((to - from) / 5) + 1 },
+  (_, i) => from + i * 5
+);
+---
+
+<div class="gauge">
+  <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={
+    spans.map((s) => `${s.label}: ${s.from}–${s.to}`).join('. ')
+  }>
+    <!-- eixo -->
+    <line class="g-ext" x1={L} y1={baseY} x2={R} y2={baseY} />
+    {ticks.map((t) => (
+      <g>
+        <line class="g-ext" x1={x(t)} y1={baseY} x2={x(t)} y2={baseY + 6} />
+        <text class="g-num" x={x(t)} y={baseY + 20} text-anchor={
+          t === from ? 'start' : t === ticks[ticks.length - 1] ? 'end' : 'middle'
+        }>{t}</text>
+      </g>
+    ))}
+
+    <!-- cotas -->
+    {spans.map((s, i) => {
+      const y = baseY - 26 - i * rowH;
+      const x1 = x(s.from);
+      const x2 = x(s.to);
+      const cls = s.emphasis ? 'g-line g-line--hot' : 'g-line';
+      const num = s.emphasis ? 'g-num g-num--hot' : 'g-num';
+      return (
+        <g>
+          <line class="g-ext" x1={x1} y1={y} x2={x1} y2={baseY} />
+          <line class="g-ext" x1={x2} y1={y} x2={x2} y2={baseY} />
+          <line class={cls} x1={x1} y1={y} x2={x2} y2={y} />
+          <path class={cls} d={`M${x1 + 9} ${y - 4} L${x1} ${y} L${x1 + 9} ${y + 4}`} />
+          <path class={cls} d={`M${x2 - 9} ${y - 4} L${x2} ${y} L${x2 - 9} ${y + 4}`} />
+          <text class="g-label" x={x1 + 14} y={y - 9}>{s.label}</text>
+          <text class={num} x={x2 - 14} y={y - 9} text-anchor="end">
+            {s.to - s.from} yr
+          </text>
+        </g>
+      );
+    })}
+  </svg>
+</div>
